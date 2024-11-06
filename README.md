@@ -20,4 +20,4 @@ cd magisk-furtif
 python3 build.py
 ```
 
-Two zip files will be generated in the same folder, grab the right architecture.
+Zip fils will be generated in builds.
