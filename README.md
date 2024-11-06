@@ -2,7 +2,8 @@
 
 ## Description
 
-Runs apk-tools on boot with magisk
+Runs apk-tools on boot with magisk. 
+
 For more information on frida, see https://www.frida.re/docs/android/.
 
 ## Instructions
