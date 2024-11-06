@@ -16,6 +16,9 @@ done
 # ensure boot has actually completed
 sleep 5
 
+# force resolution before start apk to 1280x960
+# wm size 1280x960
+
 # start apk tools
 am start -n com.github.furtif.furtifformaps/com.github.furtif.furtifformaps.MainActivity
 
