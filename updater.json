@@ -1,6 +1,6 @@
 {
     "version": "1.2",
     "versionCode": 12,
-    "zipUrl": "https://github.com/Furtif/magisk-furtif/releases/download/v1.1/MagiskFurtif-1.1.zip",
-    "changelog": "https://github.com/Furtif/magisk-furtif/compare/v1.0...v1.1"
+    "zipUrl": "https://github.com/Furtif/magisk-furtif/releases/download/v1.2/MagiskFurtif-1.2.zip",
+    "changelog": "https://github.com/Furtif/magisk-furtif/compare/v1.1...v1.2"
 }
