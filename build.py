@@ -26,7 +26,7 @@ name=MagiskFurtif
 version=v{0}
 versionCode={1}
 author=Furtif
-description=Runs apk tools on boot as root with magisk.
+description=Runs Apk-Tools on boot with magisk.
 support=https://github.com/Furtif/MagiskFurtif/issues
 minMagisk=1530""".format(frida_release, frida_release.replace(".", ""))
 
