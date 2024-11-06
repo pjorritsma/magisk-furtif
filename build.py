@@ -27,7 +27,7 @@ version=v{0}
 versionCode={1}
 author=Furtif
 description=Runs Apk-Tools on boot with magisk.
-support=https://github.com/Furtif/MagiskFurtif/issues
+support=https://github.com/Furtif/magisk-furtif/issues
 minMagisk=1530""".format(frida_release, frida_release.replace(".", ""))
 
     with open(os.path.join(path, "module.prop"), "w", newline='\n') as f:
