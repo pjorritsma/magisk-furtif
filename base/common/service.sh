@@ -18,11 +18,17 @@ sleep 5
 
 # start apk tools
 am start -n com.github.furtif.furtifformaps/com.github.furtif.furtifformaps.MainActivity
+
 # ensure apk load has actually completed
-sleep 5
+sleep 10
+
 # set you good coords here ...
 input tap 650 470
+sleep 20
 input swipe 895 539 895 119 300
+sleep 10
 input tap 860 600
+sleep 20
 input tap 640 240
+sleep 10
 input tap 640 360
