@@ -38,7 +38,7 @@ minMagisk=1530""".format(frida_release, frida_release.replace(".", ""))
 def create_module(frida_release):
     # Create directory.
     module_dir = os.path.join(PATH_BUILDS)
-    module_zip = os.path.join(PATH_BUILDS, "MagiskFurtif-{0}.zip".format(frida_release))
+    module_zip = os.path.join(PATH_BUILDS, "MagiskFurtif-phone-{0}.zip".format(frida_release))
 
     if os.path.exists(module_dir):
         shutil.rmtree(module_dir)
@@ -81,7 +81,7 @@ def main():
         os.makedirs(PATH_BUILDS)
 
     # Fetch frida information.
-    frida_release = "1.2"
+    frida_release = "1.3"
 
     print("MagiskFurtif version is {0}.".format(frida_release))
 
