@@ -26,12 +26,13 @@ am start -n com.github.furtif.furtifformaps/com.github.furtif.furtifformaps.Main
 sleep 10
 
 # set you good coords here ...
-input tap 650 470
+# this is for pixel5 edit for according yours
+input tap 545 1350
 sleep 20
-input swipe 895 539 895 119 300
+input swipe 560 1800 560 450
 sleep 10
-input tap 860 600
+input tap 545 1980
 sleep 20
-input tap 640 240
+input tap 545 710
 sleep 10
-input tap 640 360
+input tap 545 1205
