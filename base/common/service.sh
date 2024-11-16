@@ -78,7 +78,7 @@ send_discord_message() {
         # Send a POST request to Discord Webhook with the message content.
         # If the POST request fails, output a failure message to the terminal.
         "$BINDIR"/curl -X POST -H "Content-Type: application/json" \
-        -d "{\"content\": \"$1\"}" "$DISCORD_WEBHOOK_URL" || echo "Failed to send Discord message"
+        -d "{\"content\": \"$1\"}" "$DISCORD_WEBHOOK_URL" || ui_print "Failed to send Discord message"
     fi
 }
 
