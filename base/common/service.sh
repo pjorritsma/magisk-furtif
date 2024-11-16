@@ -144,9 +144,9 @@ while true; do
         continue  # Skip the current iteration and start checking again.
     fi
 
-    # Perform Rotom API check if USEROTOM is enabled.
-    rotom_device_status
-    
     # Wait for 5 minutes (300 seconds) before checking the status again.
     sleep 300
+    
+    # Perform Rotom API check if USEROTOM is enabled after the 5-minute wait.
+    rotom_device_status
 done
