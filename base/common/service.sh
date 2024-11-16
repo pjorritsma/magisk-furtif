@@ -7,116 +7,145 @@
 MODDIR=${0%/*}
 
 # Global vars
-# Set the path to the Termux binary directory. For Android 14 (or specific versions),
-# Termux's binaries are typically located at this path. This path might vary depending on your Android environment.
+# Set the path to the Termux binary directory. This path might vary depending on the Android version.
+# For Android 14 (or specific versions), Termux binaries are typically located at this path.
 BINDIR="/data/data/com.termux/files/usr/bin"
 
-# Define the device name for identification purposes in messages
+# Define the device name to be used in log messages and notifications.
 DEVICENAME="Pixel5"
 
-# Set the Discord Webhook URL to send notifications. 
-# You would replace this URL with your actual Discord webhook URL to send messages to a Discord channel.
+# Set the Discord Webhook URL to send notifications about device status.
+# Replace this URL with your actual Discord webhook URL to send messages to a Discord channel.
 DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/xxxxxx/yyyyyyy"
 
 # Option to control whether to send Discord messages or not.
-# If set to true, messages will be sent to the Discord webhook; otherwise, they will be skipped.
+# If true, messages will be sent to the Discord webhook; otherwise, they will be skipped.
 USEDISCORD=false  # Set to true to enable Discord notifications
 
-# This script will be executed in late_start service mode,
-# meaning it runs after most services have been started.
+# URL for Rotom API to check device status.
+ROTOMAPI_URL="http://rotom/api/status"
 
-# Wait for the system to complete boot process. 
-# This will repeatedly check the "sys.boot_completed" system property, which turns to "1" once boot is done.
+# Option to enable checking the Rotom API status for the device.
+USEROTOM=false  # Set to true to enable Rotom API checks
+
+# The script is set to run in the late_start service mode, which ensures it runs after most services are started.
+
+# Wait for the system boot process to complete by checking the "sys.boot_completed" system property.
+# The system property will be "1" once boot is fully completed.
 while [ "$(getprop sys.boot_completed)" != 1 ]; do
     sleep 1  # Sleep for 1 second before checking again.
 done
 
-# Ensure boot has fully completed after getting the boot status
-# This introduces a short delay after boot completion to ensure all services are fully initialized.
+# Ensure boot has fully completed after checking the boot status by adding a short delay.
 sleep 5
 
-# Function to send messages to Discord using the webhook URL
+# Function to check the device's status using the Rotom API.
+rotom_device_status() {
+    # Only perform the status check if USEROTOM is enabled (true).
+    if [ "$USEROTOM" = true ]; then
+        response=$("$BINDIR"/curl -s "$ROTOMAPI_URL")  # Fetch the response from the Rotom API.
+        
+        # Extract device information based on the device name from the API response.
+        device_info=$(echo "$response" | jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))')  
+        
+        # Check if the device is alive and if free memory is below a certain threshold.
+        is_alive=$(echo "$device_info" | jq -r '.isAlive')
+        mem_free=$(echo "$device_info" | jq -r '.lastMemory.memFree')   
+        
+        # If the device is not alive or has insufficient free memory, trigger a Discord alert and reboot.
+        if [ "$is_alive" = "false" ] || [ "$mem_free" -lt 200000 ]; then
+            send_discord_message "🔴 Alert: Device $DEVICENAME is offline or low on memory. Rebooting now..."
+            # Uncomment to enable automatic reboot.
+            # reboot
+        fi
+    fi
+}
+
+# Function to send messages to Discord using the webhook URL.
 send_discord_message() {
     # Check if sending Discord messages is enabled (USEDISCORD=true).
     if [ "$USEDISCORD" = true ]; then
-        # Use curl to send a POST request to Discord Webhook with the message content.
-        # If the POST fails, it will print a failure message to the terminal.
+        # Send a POST request to Discord Webhook with the message content.
+        # If the POST request fails, output a failure message to the terminal.
         "$BINDIR"/curl -X POST -H "Content-Type: application/json" \
         -d "{\"content\": \"$1\"}" "$DISCORD_WEBHOOK_URL" || echo "Failed to send Discord message"
     fi
 }
 
-# Function to check the status of the device by checking if specific processes are running.
+# Function to check if specific processes (Pokémon GO and FurtiF™ Tools) are running on the device.
 check_device_status() {
-    # Use pidof to check if the processes for Pokémon GO (com.nianticlabs.pokemongo) and FurtiF™ Tools (com.github.furtif.furtifformaps) are running.
+    # Use pidof to check if the processes for Pokémon GO and FurtiF™ Tools are running.
     PidPOGO=$(pidof com.nianticlabs.pokemongo)
     PidAPK=$(pidof com.github.furtif.furtifformaps)   
-  
-    # Check if either of the two processes is missing (i.e., they are not running).
-    # If either process is not found (empty PID), the device is considered offline.
+    
+    # If either of the processes is not running (empty PID), consider the device offline.
+    # If both processes are running, the device is considered online.
     if [[ -z "$PidPOGO" || -z "$PidAPK" ]]; then
-        return 1  # Devices are online if both processes are running.
+        return 1  # Device is offline if either process is missing.
     fi
-    return 0  # Devices are offline if either process is not running.
+    return 0  # Device is online if both processes are running.
 }
 
-# Function to close apps if the device is offline and then restart the necessary application.
+# Function to force-close apps and restart FurtiF™ Tools if the device is offline.
 close_apps_if_offline_and_start_it() {
-    # Force-stop both FurtiF™ Tools and Pokémon GO if they are running (since we assume the device is offline).
+    # Force-stop FurtiF™ Tools and Pokémon GO if they are running (device is offline).
     am force-stop com.github.furtif.furtifformaps
     am force-stop com.nianticlabs.pokemongo
     
-    # Send a message to Discord that the device is offline and apps were closed.
+    # Notify Discord that the device is offline and apps were closed.
     send_discord_message "🔴 Alert: $DEVICENAME is offline! Closed --=FurtiF™=-- Tools and Pokémon GO."
     
-    # Wait for a short period (5 seconds) before attempting to restart the APK tools.
+    # Wait for 5 seconds before restarting the APK tools.
     sleep 5
 
-    # Call the function to start the APK again.
+    # Start the APK tools (FurtiF™ Tools).
     start_apk_tools
 }
 
-# Function to start the APK (FurtiF™ Tools) and perform actions like login and authorize.
+# Function to start the FurtiF™ Tools APK and perform necessary actions.
 start_apk_tools() {
-    # Start the FurtiF™ Tools APK and navigate to its main activity.
+    # Start the FurtiF™ Tools APK and launch its main activity.
     am start -n com.github.furtif.furtifformaps/com.github.furtif.furtifformaps.MainActivity
     
     # Wait for the APK to load completely.
     sleep 5
     
-    # Simulate input events (tap, swipe, etc.) to interact with the app UI and perform required actions.
-    # These coordinates (e.g., 545, 1350) should be adjusted based on your device's screen and app layout.
+    # Simulate user interactions (taps, swipes, etc.) to perform actions in the app.
+    # Coordinates are based on the device's screen and app layout and may need adjustments.
     
     input tap 545 1350  # Simulate a tap to log in.
-    sleep 10  # Wait for 10 seconds to ensure the login process completes.
+    sleep 10  # Wait for the login process to complete.
     
-    input swipe 560 1800 560 450  # Simulate a swipe gesture (possibly to navigate or accept something).
+    input swipe 560 1800 560 450  # Simulate a swipe gesture (possibly to accept or navigate).
     sleep 3  # Wait for 3 seconds after swipe.
     
-    input tap 545 1980  # Tap to authorize or confirm something.
-    sleep 10  # Wait for 10 seconds to allow authorization to process.
+    input tap 545 1980  # Tap to authorize or confirm an action.
+    sleep 10  # Wait for 10 seconds to process the authorization.
     
-    input tap 545 710  # Tap to recheck services status.
+    input tap 545 710  # Tap to recheck service status.
     sleep 1  # Wait for 1 second.
     
-    input tap 545 1205  # Tap to start the service (activate or begin some function).
+    input tap 545 1205  # Tap to start the service or trigger some function.
     sleep 1  # Wait for 1 second after starting the service.
     
-    # Send a status message to Discord indicating the actions performed.
+    # Send a status update to Discord indicating that the tools have been started and actions have been performed.
     send_discord_message "🟢 Status: --=FurtiF™=-- Tools started and actions performed."
 }
 
-# Introduce a short delay to allow the system to stabilize after boot before starting the main loop.
+# Introduce a short delay to allow the system to stabilize after boot.
 sleep 10
 
-# Main loop: Continuously check device status and restart the APK if the device is offline.
+# Main loop to continuously check the device status and restart the APK if necessary.
 while true; do
-    # If the device is offline (either POGO or FurtiF™ Tools are not running), close the apps and restart the tools.
+    # If the device is offline (Pokémon GO or FurtiF™ Tools are not running), close apps and restart the tools.
     if ! check_device_status; then
-        close_apps_if_offline_and_start_it  # Close apps if offline and restart the tools.
-        sleep 5  # Wait for 5 seconds before checking status again.
+        close_apps_if_offline_and_start_it  # Close apps and restart the tools if offline.
+        sleep 5  # Wait for 5 seconds before checking the status again.
         continue  # Skip the current iteration and start checking again.
     fi
+
+    # Perform Rotom API check if USEROTOM is enabled.
+    rotom_device_status
     
     # Wait for 5 minutes (300 seconds) before checking the status again.
     sleep 300
