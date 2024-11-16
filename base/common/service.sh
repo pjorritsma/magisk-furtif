@@ -56,7 +56,7 @@ rotom_device_status() {
 
         # If the device is not alive or has insufficient free memory, trigger a Discord alert and reboot.
         if [ "$is_alive" = "false" ] || [ "$mem_free" -lt 200000 ]; then
-            send_discord_message "🔴 Alert: Device $DEVICENAME is offline or low on memory. Rebooting now..."
+            send_discord_message "🔴 Alert: Device **$DEVICENAME** is offline or low on memory. Rebooting now..."
             # Uncomment to enable automatic reboot.
             # reboot
         fi
@@ -95,7 +95,7 @@ close_apps_if_offline_and_start_it() {
     am force-stop com.nianticlabs.pokemongo
     
     # Notify Discord that the device is offline and apps were closed.
-    send_discord_message "🔴 Alert: $DEVICENAME is offline! Closed --=FurtiF™=-- Tools and Pokémon GO."
+    send_discord_message "🔴 Alert: Device **$DEVICENAME** is offline! Closed --=FurtiF™=-- Tools and Pokémon GO."
     
     # Wait for 5 seconds before restarting the APK tools.
     sleep 5
@@ -131,7 +131,7 @@ start_apk_tools() {
     sleep 1  # Wait for 1 second after starting the service.
     
     # Send a status update to Discord indicating that the tools have been started and actions have been performed.
-    send_discord_message "🟢 Status: --=FurtiF™=-- Tools started and actions performed."
+    send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** started and actions performed."
 }
 
 # Introduce a short delay to allow the system to stabilize after boot.
