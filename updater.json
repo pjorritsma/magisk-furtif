@@ -1,6 +1,6 @@
 {
     "version": "1.3",
     "versionCode": 13,
-    "zipUrl": "https://github.com/Furtif/magisk-furtif/releases/download/v1.2/MagiskFurtif-phone-1.3.zip",
-    "changelog": "https://raw.githubusercontent.com/Furtif/magisk-furtif/phone/CHANGELOG.md"
+    "zipUrl": "https://github.com/Furtif/magisk-furtif/releases/download/v1.3/MagiskFurtif-1.3.zip",
+    "changelog": "https://raw.githubusercontent.com/Furtif/magisk-furtif/main/CHANGELOG.md"
 }
