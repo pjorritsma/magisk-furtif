@@ -17,6 +17,7 @@ In order to build it:
 ```
 git clone https://github.com/Furtif/magisk-furtif
 cd magisk-furtif
+edit base/common/service.sh
 python3 build.py
 ```
 

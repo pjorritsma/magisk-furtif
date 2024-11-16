@@ -52,6 +52,8 @@ rotom_device_status() {
         is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
         mem_free=$(echo "$device_info" | "$BINDIR"/jq -r '.lastMemory.memFree')   
         
+        send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** isAlive: **$is_alive** free memory: **$mem_free**"
+
         # If the device is not alive or has insufficient free memory, trigger a Discord alert and reboot.
         if [ "$is_alive" = "false" ] || [ "$mem_free" -lt 200000 ]; then
             send_discord_message "🔴 Alert: Device $DEVICENAME is offline or low on memory. Rebooting now..."
