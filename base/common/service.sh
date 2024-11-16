@@ -16,14 +16,14 @@ DEVICENAME="Pixel5"
 
 # Set the Discord Webhook URL to send notifications about device status.
 # Replace this URL with your actual Discord webhook URL to send messages to a Discord channel.
-DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/xxxxxx/yyyyyyy"
+DISCORD_WEBHOOK_URL="YOUR_WEBHOOK_URL_HERE"
 
 # Option to control whether to send Discord messages or not.
 # If true, messages will be sent to the Discord webhook; otherwise, they will be skipped.
 USEDISCORD=false  # Set to true to enable Discord notifications
 
 # URL for Rotom API to check device status.
-ROTOMAPI_URL="http://rotom/api/status"
+ROTOMAPI_URL="http://YOUR_ROTOM_URL_HERE/api/status"
 
 # Option to enable checking the Rotom API status for the device.
 USEROTOM=false  # Set to true to enable Rotom API checks
@@ -52,13 +52,21 @@ rotom_device_status() {
         is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
         mem_free=$(echo "$device_info" | "$BINDIR"/jq -r '.lastMemory.memFree')   
         
-        send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** isAlive: **$is_alive** free memory: **$mem_free**"
+        # Check if the device is not alive (is_alive is true)
+        # If true, send a Discord message with the device name, is_alive status, and available free memory
+        if [ "$is_alive" = "true" ]; then
+            send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** isAlive: **$is_alive** free memory: **$mem_free**"
+        fi
 
-        # If the device is not alive or has insufficient free memory, trigger a Discord alert and reboot.
+        # If the device is not alive (is_alive is false) or has insufficient free memory (less than 200MB),
+        # send a Discord alert indicating the issue (device offline or low memory).
+        # Then, attempt to fix the issue by restarting applications or triggering a reboot if needed.
         if [ "$is_alive" = "false" ] || [ "$mem_free" -lt 200000 ]; then
-            send_discord_message "🔴 Alert: Device **$DEVICENAME** is offline or low on memory. Rebooting now..."
-            # Uncomment to enable automatic reboot.
+            send_discord_message "🔴 Alert: Device **$DEVICENAME** is offline or low on memory. Fix issue now..."
+            # Uncomment to enable automatic reboot or use close_apps_if_offline_and_start_it to restart all apps.
             # reboot
+            close_apps_if_offline_and_start_it  # Attempt to fix by restarting applications
+            sleep 5  # Wait for 5 seconds before checking the status again to ensure stability
         fi
     fi
 }
