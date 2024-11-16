@@ -80,7 +80,7 @@ def main():
         os.makedirs(PATH_BUILDS)
 
     # Fetch frida information.
-    frida_release = "1.4"
+    frida_release = "1.5"
 
     print("MagiskFurtif version is {0}.".format(frida_release))
 
