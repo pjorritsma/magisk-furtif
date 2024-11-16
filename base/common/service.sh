@@ -46,11 +46,11 @@ rotom_device_status() {
         response=$("$BINDIR"/curl -s "$ROTOMAPI_URL")  # Fetch the response from the Rotom API.
         
         # Extract device information based on the device name from the API response.
-        device_info=$(echo "$response" | jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))')  
+        device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))')  
         
         # Check if the device is alive and if free memory is below a certain threshold.
-        is_alive=$(echo "$device_info" | jq -r '.isAlive')
-        mem_free=$(echo "$device_info" | jq -r '.lastMemory.memFree')   
+        is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
+        mem_free=$(echo "$device_info" | "$BINDIR"/jq -r '.lastMemory.memFree')   
         
         # If the device is not alive or has insufficient free memory, trigger a Discord alert and reboot.
         if [ "$is_alive" = "false" ] || [ "$mem_free" -lt 200000 ]; then
