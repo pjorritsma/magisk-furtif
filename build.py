@@ -28,7 +28,6 @@ versionCode={1}
 author=Furtif
 description=Runs FurtiF Tools on boot with magisk.
 support=https://github.com/Furtif/magisk-furtif/issues
-updateJson=https://raw.githubusercontent.com/Furtif/magisk-furtif/refs/heads/main/updater.json
 minMagisk=1530""".format(frida_release, frida_release.replace(".", ""))
 
     with open(os.path.join(path, "module.prop"), "w", newline='\n') as f:
@@ -81,7 +80,7 @@ def main():
         os.makedirs(PATH_BUILDS)
 
     # Fetch frida information.
-    frida_release = "1.3"
+    frida_release = "1.4"
 
     print("MagiskFurtif version is {0}.".format(frida_release))
 
