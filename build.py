@@ -91,21 +91,17 @@ def create_module(frida_release):
             with zipfile.ZipFile(module_zip, "w") as zf:
                 for file_name in file_list:
                     path = os.path.join(module_dir, file_name)
-
                     if not os.path.exists(path):
                         print("File {0} does not exist..".format(path))
                         continue
-
                     zf.write(path, arcname=file_name)           
     else:
         with zipfile.ZipFile(module_zip, "w") as zf:
             for file_name in file_list:
                 path = os.path.join(module_dir, file_name)
-
                 if not os.path.exists(path):
                     print("File {0} does not exist..".format(path))
                     continue
-
                 zf.write(path, arcname=file_name)
 
 
