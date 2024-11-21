@@ -67,7 +67,7 @@ example:
   
   python ./build.py -n H96 -c 14
   
-  Will output zip files named from `*-H96-1.zip` to `*-H96-14.zip`.
+  Will output zip files named from `./clones/*-H96-1.zip` to `./clones/*-H96-14.zip`.
 ```
 
 Zip fils will be generated in builds.
