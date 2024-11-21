@@ -28,7 +28,7 @@ cd magisk-furtif
 edit base/common/service.sh
 python3 build.py
 ```
-
+### Usage as clone mode
 ```
 usage: build.py [-h] [-n NAME] [-c CLONE]
 
