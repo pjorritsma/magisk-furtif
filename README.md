@@ -68,7 +68,7 @@ example:
   python ./build.py -n H96 -c 14
   
   Will output zip files named from `./clones/*-H96-1.zip` to `./clones/*-H96-14.zip` 
-  ALL as same configuration, only name device change, this need according from your device name.
+  ALL as same configuration, only name device change, this need according from your device name H96-1 - 14.
 ```
 
 Zip fils will be generated in builds or clones.
