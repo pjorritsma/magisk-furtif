@@ -29,4 +29,13 @@ edit base/common/service.sh
 python3 build.py
 ```
 
+```
+usage: build.py [-h] [-n NAME] [-c CLONE]
+
+options:
+  -h, --help                    show this help message and exit
+  -n NAME, --name NAME          Name for clone.
+  -c CLONE, --clone CLONE       Number for clones.
+```
+
 Zip fils will be generated in builds.
