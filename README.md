@@ -34,8 +34,15 @@ usage: build.py [-h] [-n NAME] [-c CLONE]
 
 options:
   -h, --help                    show this help message and exit
-  -n NAME, --name NAME          Name for clone.
-  -c CLONE, --clone CLONE       Number for clones.
+  -n NAME, --name NAME           Name for the clone.
+  -c CLONE, --clone CLONE        Number of clones to create.
+
+example:
+  If you set the name in the APK tool as `h96-*`, running the following command:
+  
+  python ./build.py -n H96 -c 14
+  
+  Will output zip files named from `*-H96-1.zip` to `*-H96-14.zip`.
 ```
 
 Zip fils will be generated in builds.
