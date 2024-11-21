@@ -38,7 +38,7 @@ options:
   -c CLONE, --clone CLONE        Number of clones to create.
 
 example:
-  If you set the name in the APK tool as `h96-*`, running the following command:
+  If you set the name in the APK tool as `H96-*`, running the following command:
   
   python ./build.py -n H96 -c 14
   
