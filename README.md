@@ -58,9 +58,9 @@ python3 build.py
 usage: build.py [-h] [-n NAME] [-c CLONE]
 
 options:
-  -h, --help                    show this help message and exit
-  -n NAME, --name NAME           Name for the clone.
-  -c CLONE, --clone CLONE        Number of clones to create.
+  -h, --help                     Show this help message and exit
+  -n NAME, --name String         Name for the clone.
+  -c CLONE, --clone Number       Number of clones to create.
 
 example:
   If you set the name in the APK tool as `H96-*`, running the following command:
