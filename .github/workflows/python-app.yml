@@ -5,36 +5,24 @@ name: Python script
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
     
-    strategy:
-      matrix:
-        versions: [0.337.x, base, base_proto2]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python 3.9
-      uses: actions/setup-python@v2
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
       with:
-        python-version: 3.9
-    - name: Run build of version ${{ matrix.versions }}
+        python-version: "3.10"
+        
+    - name: Run build
       run: |
-        # Install dependencies...
-        sudo apt-get install clang-format
-        pushd /tmp
-        wget https://github.com/protocolbuffers/protobuf/releases/download/v22.3/protoc-22.3-linux-x86_64.zip
-        unzip protoc-22.3-linux-x86_64.zip
-        popd
-        export PATH=/tmp/bin:$PATH
         # Run's
-        chmod +x ./compile_base.py
-        ./compile_base.py -l cpp -v ${{ matrix.versions }}
-        clang-format -i -style file $(find base -name "v${{ matrix.versions }}.proto")
-        # git diff --exit-code
+        chmod +x ./build.py
+        ./build.py -n H96 -c 14
