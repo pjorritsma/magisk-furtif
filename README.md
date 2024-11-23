@@ -1,4 +1,4 @@
-# MagiskFurtif [![Python application](https://github.com/Furtif/magisk-furtif/actions/workflows/python-app.yml/badge.svg)](https://github.com/Furtif/magisk-furtif/actions/workflows/python-app.yml)
+# MagiskFurtif [![Magisk Module](https://github.com/Furtif/magisk-furtif/actions/workflows/python-app.yml/badge.svg)](https://github.com/Furtif/magisk-furtif/actions/workflows/python-app.yml)
 
 ## Description
 
