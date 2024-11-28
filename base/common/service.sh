@@ -57,7 +57,9 @@ rotom_device_status() {
         fi
         
         # Extract device information based on the device name from the API response.
-        device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))') 
+        #device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))')
+        # This ensures that $name gets concatenated properly into the regex string.
+        device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | test("\\b" + $name + "\\b"))')
         
         # Extract the status (isAlive) and memory information (memFree).
         is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
