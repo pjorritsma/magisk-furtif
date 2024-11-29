@@ -43,7 +43,7 @@ while [ "$(getprop sys.boot_completed)" != 1 ]; do
 done
 
 # Ensure boot has fully completed after checking the boot status by adding a short delay.
-sleep 5
+sleep 20
 
 # Function to check the device's status using the Rotom API.
 rotom_device_status() {
@@ -57,11 +57,10 @@ rotom_device_status() {
         fi
         
         # Extract device information based on the device name from the API response.
-        #device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | contains($name))')
         # This ensures that $name gets concatenated properly into the regex string.
         device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select(.origin | test("\\b" + $name + "\\b"))')
         
-        # Extract the status (isAlive) and memory information (memFree).
+        # Extract the status (isAlive) and memory information (memFree) from the API response.
         is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
         mem_free=$(echo "$device_info" | "$BINDIR"/jq -r '.lastMemory.memFree')   
         
@@ -150,9 +149,6 @@ start_apk_tools() {
     # Send a status update to Discord indicating that the tools have been started and actions have been performed.
     send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** started and actions performed."
 }
-
-# Introduce a short delay to allow the system to stabilize after boot.
-sleep 10
 
 # Main loop to continuously check the device status and restart the APK if necessary.
 while true; do
