@@ -43,7 +43,7 @@ while [ "$(getprop sys.boot_completed)" != 1 ]; do
 done
 
 # Ensure boot has fully completed after checking the boot status by adding a short delay.
-sleep 20
+sleep 5
 
 # Function to check the device's status using the Rotom API.
 rotom_device_status() {
@@ -149,6 +149,9 @@ start_apk_tools() {
     # Send a status update to Discord indicating that the tools have been started and actions have been performed.
     send_discord_message "🟢 Status: --=FurtiF™=-- Tools Device **$DEVICENAME** started and actions performed."
 }
+
+# Introduce a short delay to allow the system to stabilize after boot.
+sleep 15
 
 # Main loop to continuously check the device status and restart the APK if necessary.
 while true; do
