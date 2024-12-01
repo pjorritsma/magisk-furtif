@@ -83,7 +83,7 @@ def create_module(frida_release):
     traverse_path_to_list(file_list, "./system")
     traverse_path_to_list(file_list, "./META-INF")
 
-    if name is not None:
+    if name is not None and clones > 1:
         for i in range(1, clones + 1):
             device_name = "{0}-{1}".format(name, i)
             replace_device_name_in_service(device_name)
@@ -94,7 +94,18 @@ def create_module(frida_release):
                     if not os.path.exists(path):
                         print("File {0} does not exist..".format(path))
                         continue
-                    zf.write(path, arcname=file_name)           
+                    zf.write(path, arcname=file_name)
+    elif name is not None and (clones == 0 or clones == 1):
+        device_name = "{0}".format(name)
+        replace_device_name_in_service(device_name)
+        module_zip = os.path.join(PATH_CLONES, "MagiskFurtif-{0}-{1}.zip".format(frida_release, device_name))
+        with zipfile.ZipFile(module_zip, "w") as zf:
+            for file_name in file_list:
+                path = os.path.join(module_dir, file_name)
+                if not os.path.exists(path):
+                    print("File {0} does not exist..".format(path))
+                    continue
+                zf.write(path, arcname=file_name)                     
     else:
         with zipfile.ZipFile(module_zip, "w") as zf:
             for file_name in file_list:
@@ -116,7 +127,7 @@ def main():
         os.makedirs(PATH_CLONES)
 
     # Fetch frida information.
-    frida_release = "1.5"
+    frida_release = "1.6"
 
     print("MagiskFurtif version is {0}.".format(frida_release))
         
