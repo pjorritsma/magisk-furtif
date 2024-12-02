@@ -59,6 +59,20 @@ rotom_device_status() {
         # Extract device information based on the device name from the API response.
         device_info=$(echo "$response" | "$BINDIR"/jq -r --arg name "$DEVICENAME" '.devices[] | select((.origin | split(" • ")[1]) == $name)')
        
+        # Check if device_info is empty or null
+        if [ -z "$device_info" ] || [ "$device_info" == "null" ]; then
+            # Device info not found or null, send an alert to Discord
+            send_discord_message "🔴 Alert: Device **$DEVICENAME** has no info or was not found in the Rotom API..."
+            # Uncomment the following line to enable automatic reboot if needed.
+            # reboot   
+            # Attempt to fix the issue by restarting applications
+            close_apps_if_offline_and_start_it     
+            # Wait for 5 seconds before checking the status again to ensure stability
+            sleep 5 
+            # Exit the function, but do not quit the script
+            return  # Exits the current function and allows the script to continue
+        fi
+      
         # Extract the status (isAlive) and memory information (memFree) from the API response.
         is_alive=$(echo "$device_info" | "$BINDIR"/jq -r '.isAlive')
         mem_free=$(echo "$device_info" | "$BINDIR"/jq -r '.lastMemory.memFree')   
