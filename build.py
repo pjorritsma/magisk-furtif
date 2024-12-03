@@ -1,34 +1,11 @@
 #!/user/bin/env python3
-import argparse
 import os
 import shutil
 import zipfile
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-n", "--name", type=str, help="Name for clone.")
-parser.add_argument("-c", "--clone", type=int, help="Number for clones.")
-args = parser.parse_args()
-# Set defaults args
-name = args.name or None
-clones = args.clone or 0
-
 PATH_BASE = os.path.abspath(os.path.dirname(__file__))
 PATH_BASE_MODULE = os.path.join(PATH_BASE, "base")
 PATH_BUILDS = os.path.join(PATH_BASE, "builds")
-PATH_CLONES = os.path.join(PATH_BASE, "clones")
-SERVICE_FILE = os.path.join(PATH_BUILDS, "common", "service.sh")
-
-
-def replace_device_name_in_service(device_name):
-    with open(SERVICE_FILE, "r") as f:
-        lines = f.readlines()
-
-    with open(SERVICE_FILE, "w") as f:
-        for line in lines:
-            if line.startswith("DEVICENAME="):
-                f.write(f'DEVICENAME="{device_name}"\n')
-            else:
-                f.write(line)
 
 
 def traverse_path_to_list(file_list, path):
@@ -83,51 +60,22 @@ def create_module(frida_release):
     traverse_path_to_list(file_list, "./system")
     traverse_path_to_list(file_list, "./META-INF")
 
-    if name is not None and clones > 1:
-        for i in range(1, clones + 1):
-            device_name = "{0}-{1}".format(name, i)
-            replace_device_name_in_service(device_name)
-            module_zip = os.path.join(PATH_CLONES, "MagiskFurtif-{0}-{1}.zip".format(frida_release, device_name))
-            with zipfile.ZipFile(module_zip, "w") as zf:
-                for file_name in file_list:
-                    path = os.path.join(module_dir, file_name)
-                    if not os.path.exists(path):
-                        print("File {0} does not exist..".format(path))
-                        continue
-                    zf.write(path, arcname=file_name)
-    elif name is not None and (clones == 0 or clones == 1):
-        device_name = "{0}".format(name)
-        replace_device_name_in_service(device_name)
-        module_zip = os.path.join(PATH_CLONES, "MagiskFurtif-{0}-{1}.zip".format(frida_release, device_name))
-        with zipfile.ZipFile(module_zip, "w") as zf:
-            for file_name in file_list:
-                path = os.path.join(module_dir, file_name)
-                if not os.path.exists(path):
-                    print("File {0} does not exist..".format(path))
-                    continue
-                zf.write(path, arcname=file_name)                     
-    else:
-        with zipfile.ZipFile(module_zip, "w") as zf:
-            for file_name in file_list:
-                path = os.path.join(module_dir, file_name)
-                if not os.path.exists(path):
-                    print("File {0} does not exist..".format(path))
-                    continue
-                zf.write(path, arcname=file_name)
+    with zipfile.ZipFile(module_zip, "w") as zf:
+        for file_name in file_list:
+            path = os.path.join(module_dir, file_name)
+            if not os.path.exists(path):
+                print("File {0} does not exist..".format(path))
+                continue
+            zf.write(path, arcname=file_name)
 
 
 def main():
     # Create necessary folders.
     if not os.path.exists(PATH_BUILDS):
         os.makedirs(PATH_BUILDS)
-    # Clean clones dir
-    if os.path.exists(PATH_CLONES):
-        shutil.rmtree(PATH_CLONES)
-    if not os.path.exists(PATH_CLONES):
-        os.makedirs(PATH_CLONES)
 
     # Fetch frida information.
-    frida_release = "1.7"
+    frida_release = "1.8"
 
     print("MagiskFurtif version is {0}.".format(frida_release))
         

@@ -53,22 +53,5 @@ cd magisk-furtif
 edit base/common/service.sh
 python3 build.py
 ```
-### Usage as clone mode build:
-```
-usage: build.py [-h] [-n NAME] [-c CLONE]
 
-options:
-  -h, --help                     Show this help message and exit
-  -n NAME, --name String         Name for the clone.
-  -c CLONE, --clone Number       Number of clones to create.
-
-example:
-  If you set the name in the APK tool as `H96-*`, running the following command:
-  
-  python ./build.py -n H96 -c 14
-  
-  Will output zip files named from `./clones/*-H96-1.zip` to `./clones/*-H96-14.zip` 
-  ALL as same configuration, only name device change, this need according from your device name H96-1...
-```
-
-Zip fils will be generated in builds or clones.
+Zip fils will be generated in builds.
