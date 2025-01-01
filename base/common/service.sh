@@ -38,7 +38,8 @@ ROTOMAPI_USE_AUTH=false # Set to true if Rotom API requires authentication.
 
 # Wait for the system boot process to complete by checking the "sys.boot_completed" system property.
 # The system property will be "1" once the boot process is fully completed.
-while [ "$(getprop sys.boot_completed)" != 1 ]; do
+# while [ "$(getprop sys.boot_completed)" != 1 ]; do
+until [ "$(getprop sys.boot_completed)" = "1" ]; do
 	sleep 1 # Sleep for 1 second before checking again.
 done
 
