@@ -46,6 +46,13 @@ done
 # Ensure boot has fully completed after checking the boot status by adding a short delay.
 sleep 5
 
+# Unlock screen if need infos of https://stackoverflow.com/questions/29072501/how-to-unlock-android-phone-through-adb
+#input keyevent 26 #Pressing the lock button
+#input touchscreen swipe 930 880 930 380 #Swipe UP
+#input swipe 930 880 930 380 #Swipe UP
+#input text 1234 #Entering your passcode
+#input keyevent 66 #Pressing Enter
+
 # Function to check the device's status using the Rotom API.
 rotom_device_status() {
 	# Only perform the status check if USEROTOM is enabled (true).
