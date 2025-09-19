@@ -113,27 +113,26 @@ wait_for_system_ready() {
     done
 }
 
-# Get local IP address
+# Get local IP address - improved detection
 get_local_ip() {
-    # Try multiple methods to get IP address
     local ip=""
     
-    # Method 1: Get IP from route
+    # Method 1: ip route (most reliable)
     ip=$(ip route get 1.1.1.1 2>/dev/null | awk '{print $7}' | head -1)
-    if [ -n "$ip" ] && [ "$ip" != "1.1.1.1" ]; then
+    if [ -n "$ip" ] && [ "$ip" != "1.1.1.1" ] && [ "$ip" != "eth0" ]; then
         echo "$ip"
         return 0
     fi
     
-    # Method 2: Get IP from ifconfig
-    ip=$(ifconfig | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | head -1)
+    # Method 2: ip addr show (parse the output properly)
+    ip=$(ip addr show 2>/dev/null | grep "inet " | grep -v "127.0.0.1" | grep "scope global" | awk '{print $2}' | cut -d'/' -f1 | head -1)
     if [ -n "$ip" ]; then
         echo "$ip"
         return 0
     fi
     
-    # Method 3: Get IP from ip addr
-    ip=$(ip addr show | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | cut -d'/' -f1 | head -1)
+    # Method 3: ifconfig fallback
+    ip=$(ifconfig 2>/dev/null | grep "inet " | grep -v "127.0.0.1" | awk '{print $2}' | head -1)
     if [ -n "$ip" ]; then
         echo "$ip"
         return 0
