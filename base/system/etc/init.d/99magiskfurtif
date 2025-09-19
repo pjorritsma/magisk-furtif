@@ -1,0 +1,29 @@
+#!/system/bin/sh
+# MagiskFurtif Auto-Start Script
+# This script ensures the MagiskFurtif service starts on boot
+
+MODDIR="/data/adb/modules/magiskfurtif"
+SERVICE_SCRIPT="$MODDIR/service.sh"
+
+# Wait for system to be ready
+while [ "$(getprop sys.boot_completed)" != 1 ]; do
+    sleep 5
+done
+
+# Additional wait for network and storage
+sleep 30
+
+# Check if service is already running
+if pgrep -f "service.sh" >/dev/null; then
+    echo "MagiskFurtif service already running"
+    exit 0
+fi
+
+# Start the service if it exists
+if [ -f "$SERVICE_SCRIPT" ]; then
+    echo "Starting MagiskFurtif service..."
+    nohup "$SERVICE_SCRIPT" >/dev/null 2>&1 &
+    echo "MagiskFurtif service started"
+else
+    echo "MagiskFurtif service script not found at $SERVICE_SCRIPT"
+fi

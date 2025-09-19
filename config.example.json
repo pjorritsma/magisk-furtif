@@ -1,0 +1,47 @@
+{
+  "DISCORD_WEBHOOK_URL": "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL_HERE",
+  "ROTOM_URL": "https://your-rotom-api.com/api/devices",
+  "ROTOM_AUTH_USER": "your_username",
+  "ROTOM_AUTH_PASS": "your_password",
+  "CHECK_INTERVAL": 300,
+  "MEMORY_THRESHOLD": 500000,
+  "SLEEP_APP_START": 10,
+  "USE_DYNAMIC_SWIPE": true,
+  "TAP_COORDINATES": [
+    {
+      "x": 540,
+      "y": 960,
+      "sleep": 2
+    },
+    {
+      "x": 540,
+      "y": 1200,
+      "sleep": 2
+    },
+    {
+      "x": 540,
+      "y": 1440,
+      "sleep": 2
+    },
+    {
+      "x": 540,
+      "y": 1680,
+      "sleep": 2
+    }
+  ],
+  "SWIPE_COORDINATES": {
+    "start_x": 540,
+    "start_y": 1440,
+    "end_x": 540,
+    "end_y": 120,
+    "duration": 1000,
+    "sleep": 2
+  },
+  "NOTIFICATIONS": {
+    "enable_startup": true,
+    "enable_status": true,
+    "enable_errors": true,
+    "status_interval": 3600,
+    "retry_count": 3
+  }
+}

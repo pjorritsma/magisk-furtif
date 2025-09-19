@@ -1,6 +1,11 @@
 ##########################################################################################
 #
-# Magisk Module Installer Script
+# MagiskFurtif v3.1 - Enhanced Monitoring Service
+# Author: Furtif
+# Editor: PJ0tter
+# 
+# This module provides comprehensive monitoring for Pokémon GO and FurtifForMaps
+# applications with automatic restart capabilities and Discord notifications.
 #
 ##########################################################################################
 ##########################################################################################
@@ -132,10 +137,32 @@ print_modname() {
 # Copy/extract your module files into $MODPATH in on_install.
 
 on_install() {
-  # The following is the default implementation: extract $ZIPFILE/system to $MODPATH
-  # Extend/change the logic to whatever you want
-  ui_print "- Extracting module files"
-  unzip -o "$ZIPFILE" 'system/*' -d $MODPATH >&2
+  ui_print " "
+  ui_print "╔══════════════════════════════════════════════════════════════╗"
+  ui_print "║                    Magisk Furtif v3.1                        ║"
+  ui_print "║              Enhanced Monitoring Service                     ║"
+  ui_print "╚══════════════════════════════════════════════════════════════╝"
+  ui_print " "
+  ui_print "Author: Furtif"
+  ui_print "Editor: PJ0tter"
+  ui_print "Version: 3.1"
+  ui_print " "
+  ui_print "Features:"
+  ui_print "   • Auto-start functionality on boot"
+  ui_print "   • Enhanced Discord notifications"
+  ui_print "   • Pokémon GO & FurtifForMaps monitoring"
+  ui_print "   • Automatic app restart capabilities"
+  ui_print "   • Robust IP and temperature detection"
+  ui_print " "
+  ui_print "Extracting module files..."
+  unzip -o "$ZIPFILE" -d $MODPATH >&2
+  ui_print "✅ Module files extracted successfully"
+  ui_print " "
+  ui_print "Important:"
+  ui_print "   • Make sure to configure /sdcard/Download/config.json"
+  ui_print "   • Service will auto-start after reboot"
+  ui_print "   • Check logs at /sdcard/Download/device_monitor.log"
+  ui_print " "
 }
 
 # Only some special files require specific permissions
@@ -145,6 +172,16 @@ on_install() {
 set_permissions() {
   # The following is the default rule, DO NOT remove
   set_perm_recursive $MODPATH 0 0 0755 0644
+  
+  # Make init.d script executable
+  if [ -f "$MODPATH/system/etc/init.d/99magiskfurtif" ]; then
+    set_perm $MODPATH/system/etc/init.d/99magiskfurtif 0 0 0755
+  fi
+  
+  # Make service script executable
+  if [ -f "$MODPATH/service.sh" ]; then
+    set_perm $MODPATH/service.sh 0 0 0755
+  fi
 }
 
 # You can add more functions to assist your custom script code
