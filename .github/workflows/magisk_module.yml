@@ -23,9 +23,23 @@ jobs:
     steps:
     - name: Checkout repository
       run: |
-        echo "Repository checked out successfully"
+        echo "Setting up repository checkout..."
         echo "Current working directory:"
         pwd
+        
+        # Clone the repository manually since we can't use external actions
+        echo "Cloning repository..."
+        git clone https://github.com/${{ github.repository }}.git temp-repo
+        
+        # Copy files to current directory
+        echo "Copying repository files..."
+        cp -r temp-repo/* .
+        cp -r temp-repo/.* . 2>/dev/null || true
+        
+        # Clean up
+        rm -rf temp-repo
+        
+        echo "Repository checkout completed"
         echo "Repository contents:"
         ls -la
         echo "Checking if base directory exists:"
