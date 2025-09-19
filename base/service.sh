@@ -683,14 +683,16 @@ perform_automation_sequence() {
 
 # Perform dynamic swipe based on screen dimensions
 perform_dynamic_swipe() {
+    # Get screen dimensions
     local screen_size=$(get_screen_size)
     local width=$(echo "$screen_size" | awk '{print $1}')
     local height=$(echo "$screen_size" | awk '{print $2}')
     
+    # Calculate swipe coordinates (integer arithmetic)
     local start_x=$((width / 2))
-    local start_y=$((height * 3 / 4))
+    local start_y=$((height * 7 / 10))
     local end_x=$((width / 2))
-    local end_y=$((height / 20))
+    local end_y=1
     
     log_event "Performing dynamic swipe: $start_x,$start_y to $end_x,$end_y (screen: ${width}x${height})" "INFO"
     
