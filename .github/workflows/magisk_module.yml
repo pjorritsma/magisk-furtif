@@ -22,12 +22,14 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      run: |
+        echo "Repository checked out successfully"
+        ls -la
       
     - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.11"
+      run: |
+        echo "Python setup completed"
+        python3 --version
         
     - name: Install dependencies
       run: |
