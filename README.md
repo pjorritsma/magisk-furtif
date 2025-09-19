@@ -1,7 +1,7 @@
 # Device Monitor Service for --=FurtiF™=-- Tools
 
 A robust monitoring script for Android devices running --=FurtiF™=-- Tools.  
-**Version 3.2** | Enhanced Monitoring with Modular Architecture
+**Version 3.3.1** | Enhanced Monitoring with Modular Architecture
 
 ---
 
@@ -26,7 +26,7 @@ A robust monitoring script for Android devices running --=FurtiF™=-- Tools.
 
 ### Method 1: Magisk Manager  
 1. Download the module ZIP:  
-   `MagiskFurtif-f3ger-3.2.zip`  
+   `MagiskFurtif-f3ger-3.X.zip`  
 2. Open **Magisk Manager** → **Modules** → **Install from storage**.  
 3. Select the ZIP and reboot.  
 

@@ -94,7 +94,7 @@ def main():
         os.makedirs(os.path.join(PATH_BASE_MODULE, "META-INF"))
 
 # Fetch frida information.
-frida_release = "3.2"
+frida_release = "3.3.1"
 
 print("MagiskFurtif version is {0}.".format(frida_release))
 
