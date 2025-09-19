@@ -96,6 +96,14 @@ The module now supports enhanced Discord notifications with the following option
 
 ---
 
+---
+## 🆕 To Do
+- **Switch to Taps**: Remove coords from config
+- **Discord Timeout**: Detect Discord Timeout and suspend login for 3 minutes
+- **Better notification**: Let make it better
+---
+
+
 ## 🚀 Creating Releases
 
 ### Automatic Release Creation
