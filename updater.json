@@ -1,5 +1,5 @@
 {
     "version": "3.3.1",
     "versionCode": 331,
-    "zipUrl": "https://github.com/f3ger/magisk-furtif/releases/download/3.3.1/MagiskFurtif-f3ger-3.3.1.zip"
+    "zipUrl": "https://github.com/%REPO%/releases/download/v3.3.1/MagiskFurtif-f3ger-3.3.1.zip"
 }
