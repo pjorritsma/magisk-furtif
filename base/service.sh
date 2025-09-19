@@ -66,6 +66,9 @@ get_device_name() {
         fi
     fi
     
+    # Send critical notification about corrupted FurtifForMaps configuration
+    send_furtif_config_corrupted_notification
+    
     # Fallback to system properties or default
     local device_name=$(getprop ro.product.model 2>/dev/null || echo "Unknown")
     local device_id=$(getprop ro.serialno 2>/dev/null | cut -c1-8 2>/dev/null || echo "00000000")
@@ -508,6 +511,33 @@ send_status_notification() {
         "Regular status update showing current system health and application status." \
         "$NOTIFICATION_INFO" \
         "Status: All Systems Operational" \
+        "$fields" \
+        "https://cdn.discordapp.com/emojis/1234567890123456789.png"
+    )
+    (send_discord_message "$json_payload" &)
+}
+
+# Send critical notification about corrupted FurtifForMaps configuration
+send_furtif_config_corrupted_notification() {
+    local local_ip=$(get_local_ip)
+    local fallback_device_name=$(getprop ro.product.model 2>/dev/null || echo "Unknown")
+    local device_id=$(getprop ro.serialno 2>/dev/null | cut -c1-8 2>/dev/null || echo "00000000")
+    local fallback_name="${fallback_device_name}-${device_id}"
+    
+    fields=$($JQ -n \
+        --arg name1 "📱 Fallback Device" --arg value1 "$fallback_name" \
+        --arg name2 "🌐 IP Address" --arg value2 "$local_ip" \
+        --arg name3 "📁 Config Path" --arg value3 "/data/data/com.github.furtif.furtifformaps/files/config.json" \
+        --arg name4 "⚠️ Issue" --arg value4 "Config file missing or RotomDeviceName is null" \
+        --arg name5 "🔧 Action Required" --arg value5 "Create/repair FurtifForMaps configuration" \
+        '[{name: $name1, value: $value1, inline: true}, {name: $name2, value: $value2, inline: true}, {name: $name3, value: $value3, inline: false}, {name: $name4, value: $value4, inline: true}, {name: $name5, value: $value5, inline: true}]'
+    )
+    
+    json_payload=$(generate_enhanced_payload \
+        "🚨 CRITICAL: FurtifForMaps Configuration Corrupted" \
+        "**The FurtifForMaps configuration is missing or corrupted!** The system is using fallback device naming. **Immediate action required** to create/repair the configuration file." \
+        "$NOTIFICATION_CRITICAL" \
+        "Status: Configuration Error - Manual Intervention Required" \
         "$fields" \
         "https://cdn.discordapp.com/emojis/1234567890123456789.png"
     )

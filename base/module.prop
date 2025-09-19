@@ -1,7 +1,7 @@
 id=magiskfurtif
 name=MagiskFurtif
-version=v3.3.1
-versionCode=331
+version=v3.3.3
+versionCode=333
 author=Furtif
 description=Enhanced monitoring service with improved Discord notifications, auto-start functionality, and modular architecture. Monitors Pokémon GO and FurtifForMaps applications with automatic restart capabilities.
 updateJson=https://raw.githubusercontent.com/f3ger/magisk-furtif/refs/heads/main/updater.json
