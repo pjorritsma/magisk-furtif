@@ -1,0 +1,147 @@
+# MagiskFurtif Module Build and Test Workflow
+# This workflow builds the Magisk module and runs basic tests
+
+name: MagiskFurtif Module Test
+
+on:
+  push:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**.md'
+      - 'monitor_live.sh'
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      run: |
+        echo "Setting up repository checkout..."
+        echo "Current working directory:"
+        pwd
+        
+        # Clone the repository manually since we can't use external actions
+        echo "Cloning repository..."
+        git clone https://github.com/${{ github.repository }}.git temp-repo
+        
+        # Copy files to current directory
+        echo "Copying repository files..."
+        cp -r temp-repo/* .
+        cp -r temp-repo/.* . 2>/dev/null || true
+        
+        # Clean up
+        rm -rf temp-repo
+        
+        echo "Repository checkout completed"
+        echo "Repository contents:"
+        ls -la
+        echo "Checking if base directory exists:"
+        if [ -d "base" ]; then
+          echo "✅ base directory found"
+          ls -la base/
+        else
+          echo "❌ base directory not found"
+          echo "Available directories:"
+          find . -type d -maxdepth 2
+        fi
+      
+    - name: Set up Python 3.11
+      run: |
+        echo "Python setup completed"
+        python3 --version
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Verify files exist
+      run: |
+        echo "Verifying required files exist..."
+        echo "Current working directory:"
+        pwd
+        
+        echo "Current directory contents:"
+        ls -la
+        
+        echo "Base directory contents:"
+        if [ -d "base" ]; then
+          ls -la base/
+        else
+          echo "ERROR: base directory not found!"
+          echo "Available directories:"
+          find . -type d -maxdepth 2
+          exit 1
+        fi
+        
+        # Verify required files exist with better error messages
+        echo "Checking for base/service.sh..."
+        if [ -f "base/service.sh" ]; then
+          echo "✅ base/service.sh found"
+        else
+          echo "ERROR: base/service.sh not found!"
+          echo "Files in base directory:"
+          ls -la base/
+          exit 1
+        fi
+        
+        echo "Checking for base/install.sh..."
+        if [ -f "base/install.sh" ]; then
+          echo "✅ base/install.sh found"
+        else
+          echo "ERROR: base/install.sh not found!"
+          exit 1
+        fi
+        
+        echo "Checking for base/module.prop..."
+        if [ -f "base/module.prop" ]; then
+          echo "✅ base/module.prop found"
+        else
+          echo "ERROR: base/module.prop not found!"
+          exit 1
+        fi
+        
+        echo "Checking for build.py..."
+        if [ -f "build.py" ]; then
+          echo "✅ build.py found"
+        else
+          echo "ERROR: build.py not found!"
+          exit 1
+        fi
+        
+        echo "✅ All required files found!"
+        
+    - name: Test build script
+      run: |
+        echo "Testing build script..."
+        python build.py
+        
+        # Check if build was successful
+        if [ -d "builds" ] && [ "$(ls -A builds)" ]; then
+          echo "Build successful! Created files:"
+          ls -la builds/
+        else
+          echo "ERROR: Build failed - no files created in builds directory"
+          exit 1
+        fi
+        
+    - name: Verify module structure
+      run: |
+        echo "Verifying module structure..."
+        ZIP_FILE=$(find builds -name "*.zip" | head -n 1)
+        if [ -n "$ZIP_FILE" ]; then
+          echo "Found ZIP file: $ZIP_FILE"
+          echo "ZIP file size: $(ls -lh $ZIP_FILE | awk '{print $5}')"
+          echo "ZIP file contents:"
+          unzip -l "$ZIP_FILE"
+        else
+          echo "ERROR: No ZIP file found in builds directory"
+          exit 1
+        fi
