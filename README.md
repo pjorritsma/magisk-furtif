@@ -1,7 +1,7 @@
 # Device Monitor Service for --=FurtiF™=-- Tools
 
 A robust monitoring script for Android devices running --=FurtiF™=-- Tools.  
-**Version 3.0** | Enhanced Monitoring with Modular Architecture
+**Version 3.2** | Enhanced Monitoring with Modular Architecture
 
 ---
 
@@ -26,7 +26,7 @@ A robust monitoring script for Android devices running --=FurtiF™=-- Tools.
 
 ### Method 1: Magisk Manager  
 1. Download the module ZIP:  
-   `MagiskFurtif-f3ger-3.1.zip`  
+   `MagiskFurtif-f3ger-3.2.zip`  
 2. Open **Magisk Manager** → **Modules** → **Install from storage**.  
 3. Select the ZIP and reboot.  
 
@@ -72,25 +72,25 @@ The module now supports enhanced Discord notifications with the following option
 
 ---
 
-## 🆕 Version 3.1 Changelog
+## 🆕 Version 3.2 Changelog
 
 ### ✨ New Features
-- **Auto-Start Functionality**: Service now automatically starts on boot via post-fs-data.sh and init.d script
-- **Enhanced IP Detection**: Multiple fallback methods for accurate IP address detection
-- **Improved CPU Temperature**: Support for multiple thermal zones with fallback
-- **Better Error Handling**: Enhanced Discord webhook debugging and error reporting
+- **Improved Workflow Files**: Enhanced GitHub Actions workflows for better CI/CD
+- **Better Service Detection**: Enhanced process detection using top and pgrep methods
+- **Robust IP Detection**: Improved IP address detection with multiple fallback methods
+- **Enhanced Monitor Script**: Better live monitoring with improved error handling
 
 ### 🔧 Improvements
-- **Startup Notifications**: More detailed system information in startup notifications
-- **Service Reliability**: Dual auto-start methods for maximum reliability
-- **Network Detection**: Robust IP address detection with multiple methods
-- **Temperature Monitoring**: Better CPU temperature detection across different devices
+- **Workflow Reliability**: Fixed workflow files for consistent builds and releases
+- **Service Monitoring**: Better detection of MagiskFurtif service processes
+- **IP Address Accuracy**: Fixed "eth0" display issue, now shows actual IP addresses
+- **Error Handling**: Improved error handling in both service.sh and monitor_live.sh
 
 ### 🐛 Bug Fixes
-- **Auto-Start Issue**: Fixed service not starting automatically after reboot
-- **IP Address Display**: Fixed "eth0" showing instead of actual IP address
-- **CPU Temperature**: Fixed empty temperature readings
-- **Discord Notifications**: Improved error handling and debugging
+- **Workflow Issues**: Fixed GitHub Actions workflow files for proper module building
+- **Service Detection**: Fixed service process detection on Android devices
+- **IP Display**: Fixed IP address showing as "eth0" instead of actual IP
+- **Device Name**: Fixed device name detection from FurtifForMaps config
 
 ---
 
@@ -144,7 +144,7 @@ jq --version && curl --version
 ### Install the Magisk Module
 ## Method 1: Magisk Manager  
 1. Download the module ZIP:  
-   `MagiskFurtif-f3ger-3.1.zip`  
+   `MagiskFurtif-f3ger-3.2.zip`  
 2. Open **Magisk Manager** → **Modules** → **Install from storage**.  
 3. Select the ZIP and reboot.  
 

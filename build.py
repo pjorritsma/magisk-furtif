@@ -93,15 +93,15 @@ def main():
         os.makedirs(os.path.join(PATH_BASE_MODULE, "system"))
         os.makedirs(os.path.join(PATH_BASE_MODULE, "META-INF"))
 
-    # Fetch frida information.
-    frida_release = "3.1"
+# Fetch frida information.
+frida_release = "3.2"
 
-    print("MagiskFurtif version is {0}.".format(frida_release))
+print("MagiskFurtif version is {0}.".format(frida_release))
 
-    # Create flashable modules.
-    create_module(frida_release)
+# Create flashable modules.
+create_module(frida_release)
 
-    print("Done.")
+print("Done.")
 
 
 if __name__ == "__main__":

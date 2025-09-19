@@ -1,28 +1,84 @@
-# This workflow will install Python dependencies, run tests and lint with a single version of Python
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+# MagiskFurtif Module Build and Test Workflow
+# This workflow builds the Magisk module and runs basic tests
 
-name: Magisk Module
+name: MagiskFurtif Module Test
 
 on:
   push:
-    branches: [ "*" ]
+    branches: [ main, master ]
+    paths-ignore:
+      - '**.md'
+      - 'monitor_live.sh'
   pull_request:
-    branches: [ "*" ]
+    branches: [ main, master ]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  build:
-
+  test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
       with:
-        python-version: "3.10"
-    - name: Run script
+        python-version: "3.11"
+        
+    - name: Install dependencies
       run: |
-        python ./build.py -n H96 -c 14
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Verify files exist
+      run: |
+        echo "Verifying required files exist..."
+        if [ ! -f "base/service.sh" ]; then
+          echo "ERROR: base/service.sh not found!"
+          exit 1
+        fi
+        if [ ! -f "base/install.sh" ]; then
+          echo "ERROR: base/install.sh not found!"
+          exit 1
+        fi
+        if [ ! -f "base/module.prop" ]; then
+          echo "ERROR: base/module.prop not found!"
+          exit 1
+        fi
+        if [ ! -f "build.py" ]; then
+          echo "ERROR: build.py not found!"
+          exit 1
+        fi
+        echo "All required files found!"
+        
+    - name: Test build script
+      run: |
+        echo "Testing build script..."
+        python build.py
+        
+        # Check if build was successful
+        if [ -d "builds" ] && [ "$(ls -A builds)" ]; then
+          echo "Build successful! Created files:"
+          ls -la builds/
+        else
+          echo "ERROR: Build failed - no files created in builds directory"
+          exit 1
+        fi
+        
+    - name: Verify module structure
+      run: |
+        echo "Verifying module structure..."
+        ZIP_FILE=$(find builds -name "*.zip" | head -n 1)
+        if [ -n "$ZIP_FILE" ]; then
+          echo "Found ZIP file: $ZIP_FILE"
+          echo "ZIP file size: $(ls -lh $ZIP_FILE | awk '{print $5}')"
+          echo "ZIP file contents:"
+          unzip -l "$ZIP_FILE"
+        else
+          echo "ERROR: No ZIP file found in builds directory"
+          exit 1
+        fi

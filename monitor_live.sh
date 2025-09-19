@@ -281,6 +281,6 @@ while true; do
         echo -e "   ${GREEN}✅ Service is running properly${NC}"
     fi
     
-    echo -e "\n${BLUE}⏰ Refreshing in 5 seconds... (Press Ctrl+C to exit)${NC}"
-    sleep 5
+    echo -e "\n${BLUE}⏰ Refreshing in 15 seconds... (Press Ctrl+C to exit)${NC}"
+    sleep 15
 done
