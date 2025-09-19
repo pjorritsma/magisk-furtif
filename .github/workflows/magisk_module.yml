@@ -24,7 +24,19 @@ jobs:
     - name: Checkout repository
       run: |
         echo "Repository checked out successfully"
+        echo "Current working directory:"
+        pwd
+        echo "Repository contents:"
         ls -la
+        echo "Checking if base directory exists:"
+        if [ -d "base" ]; then
+          echo "✅ base directory found"
+          ls -la base/
+        else
+          echo "❌ base directory not found"
+          echo "Available directories:"
+          find . -type d -maxdepth 2
+        fi
       
     - name: Set up Python 3.11
       run: |
@@ -39,23 +51,58 @@ jobs:
     - name: Verify files exist
       run: |
         echo "Verifying required files exist..."
-        if [ ! -f "base/service.sh" ]; then
-          echo "ERROR: base/service.sh not found!"
+        echo "Current working directory:"
+        pwd
+        
+        echo "Current directory contents:"
+        ls -la
+        
+        echo "Base directory contents:"
+        if [ -d "base" ]; then
+          ls -la base/
+        else
+          echo "ERROR: base directory not found!"
+          echo "Available directories:"
+          find . -type d -maxdepth 2
           exit 1
         fi
-        if [ ! -f "base/install.sh" ]; then
+        
+        # Verify required files exist with better error messages
+        echo "Checking for base/service.sh..."
+        if [ -f "base/service.sh" ]; then
+          echo "✅ base/service.sh found"
+        else
+          echo "ERROR: base/service.sh not found!"
+          echo "Files in base directory:"
+          ls -la base/
+          exit 1
+        fi
+        
+        echo "Checking for base/install.sh..."
+        if [ -f "base/install.sh" ]; then
+          echo "✅ base/install.sh found"
+        else
           echo "ERROR: base/install.sh not found!"
           exit 1
         fi
-        if [ ! -f "base/module.prop" ]; then
+        
+        echo "Checking for base/module.prop..."
+        if [ -f "base/module.prop" ]; then
+          echo "✅ base/module.prop found"
+        else
           echo "ERROR: base/module.prop not found!"
           exit 1
         fi
-        if [ ! -f "build.py" ]; then
+        
+        echo "Checking for build.py..."
+        if [ -f "build.py" ]; then
+          echo "✅ build.py found"
+        else
           echo "ERROR: build.py not found!"
           exit 1
         fi
-        echo "All required files found!"
+        
+        echo "✅ All required files found!"
         
     - name: Test build script
       run: |
