@@ -75,6 +75,7 @@ The module now supports enhanced Discord notifications with the following option
 ## 🆕 Version 3.2 Changelog
 
 ### ✨ New Features
+- **Automatic Releases**: GitHub Actions now automatically creates releases when tags are pushed
 - **Improved Workflow Files**: Enhanced GitHub Actions workflows for better CI/CD
 - **Better Service Detection**: Enhanced process detection using top and pgrep methods
 - **Robust IP Detection**: Improved IP address detection with multiple fallback methods
@@ -85,12 +86,102 @@ The module now supports enhanced Discord notifications with the following option
 - **Service Monitoring**: Better detection of MagiskFurtif service processes
 - **IP Address Accuracy**: Fixed "eth0" display issue, now shows actual IP addresses
 - **Error Handling**: Improved error handling in both service.sh and monitor_live.sh
+- **Release Automation**: Automated release creation with proper changelog and file attachments
 
 ### 🐛 Bug Fixes
 - **Workflow Issues**: Fixed GitHub Actions workflow files for proper module building
 - **Service Detection**: Fixed service process detection on Android devices
 - **IP Display**: Fixed IP address showing as "eth0" instead of actual IP
 - **Device Name**: Fixed device name detection from FurtifForMaps config
+
+---
+
+## 🚀 Creating Releases
+
+### Automatic Release Creation
+
+The project now supports automatic release creation via GitHub Actions. When you push a tag, the workflow will automatically:
+
+1. **Build the module** with the new version
+2. **Create a GitHub release** with the ZIP file attached
+3. **Update updater.json** with the new download URL
+4. **Generate release notes** with installation instructions
+
+### How to Create a Release
+
+#### Option 1: Using the Release Script (Recommended)
+
+**For Linux/macOS:**
+```bash
+./create_release.sh
+```
+
+**For Windows:**
+```cmd
+create_release.bat
+```
+
+The script will:
+- ✅ Check for uncommitted changes
+- ✅ Ask for the new version number
+- ✅ Update all version files automatically
+- ✅ Create and push the git tag
+- ✅ Trigger the GitHub Actions workflow
+
+#### Option 2: Manual Process
+
+1. **Update version in `build.py`:**
+   ```python
+   frida_release = "3.3"  # Change to new version
+   ```
+
+2. **Update version in `base/module.prop`:**
+   ```properties
+   version=v3.3
+   versionCode=33
+   ```
+
+3. **Update version in `updater.json`:**
+   ```json
+   {
+       "version": "3.3",
+       "versionCode": 33,
+       "zipUrl": "https://github.com/your-repo/releases/download/v3.3/MagiskFurtif-f3ger-3.3.zip"
+   }
+   ```
+
+4. **Commit and push changes:**
+   ```bash
+   git add .
+   git commit -m "Bump version to 3.3"
+   git push origin main
+   ```
+
+5. **Create and push tag:**
+   ```bash
+   git tag -a v3.3 -m "Release version 3.3"
+   git push origin v3.3
+   ```
+
+### Release Process
+
+Once you push a tag (e.g., `v3.3`), GitHub Actions will:
+
+1. **🔍 Checkout** the repository
+2. **🐍 Set up Python** environment
+3. **📦 Install dependencies** (GitHub CLI)
+4. **✅ Verify** all required files exist
+5. **🔨 Build** the Magisk module
+6. **📤 Create release** with ZIP file attached
+7. **📝 Update updater.json** with new download URL
+
+### Release Notes
+
+Each release automatically includes:
+- **📦 Module Files**: Direct download link to the ZIP file
+- **🚀 Installation Instructions**: Step-by-step guide
+- **📋 Features**: List of current features
+- **🔧 Requirements**: System requirements and dependencies
 
 ---
 
